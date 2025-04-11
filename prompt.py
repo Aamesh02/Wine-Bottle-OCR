@@ -17,7 +17,6 @@ prompts = {
         ---
 
         2. **Structure the extracted text in the following format:**
-
         Vintage:  
         Producer Name:  
         Fanciful Name / Vineyard Name (if present):  
@@ -28,32 +27,32 @@ prompts = {
 
         ### Structuring Rules:
         - Do not fabricate, infer, or complete missing details.
-        - Categorize only what is clearly visible.
-        - Infer a field (e.g., Grape or Appellation) **only when logically certain** and based on known conventions (e.g., Châteauneuf-du-Pape = GSM blend).
-        - If a field cannot be confidently filled, leave it blank.
+        - Categorize only what is clearly visible on the label.
+        - Do not assume or invent any values under any circumstance.
+        - If a field cannot be confidently filled based solely on the visible text, leave it blank.
+        - Only infer a field (e.g., Grape or Appellation) when logically certain and universally standardized (e.g., Châteauneuf-du-Pape = GSM blend).
         - No extra explanation—return only the structured data.
-""",
+    """,
 
     "format_prompt": """
         Format the following wine data using this exact structure:
 
-        **Vintage, Producer Name, (Fanciful Name, Vineyard Name), Appellation, (Grape), (Size)**
+        **Vintage Producer Name (Additional Designations) Appellation Classification Vineyard Name**
 
         ### Formatting Rules:
-        - Output a single clean line, comma-separated. Do not include field labels.
-        - If a field is missing, skip it—do not include placeholders.
-        - Do not guess or fabricate values.
-        - Apply consistent, proper capitalization (e.g., "DOMAINE LEFLAIVE" → "Domaine Leflaive").
-        - Use double quotes around Lieu-Dit or Cru names (e.g., "Les Folatières").
-        - Add designation suffixes (e.g., Grand Cru, Premier Cru, Vieilles Vignes, Monopole) as per French wine law.
-        - Champagne: Include dosage (e.g., Extra Brut) and style (e.g., Blanc de Noirs), with “Champagne” as suffix.
-        - New World: Always place appellation before grape (e.g., "Mendoza Malbec").
-        - Bordeaux: Include "Grand Cru Classe" after appellation for classified growths.
-        - Rhone: Spell out "Chateauneuf du Pape Rouge/Blanc" (no hyphens).
-        - Italy: Place cru names in quotes before the appellation (e.g., "Colle Vota" Montepulciano d'Abruzzo).
-        - Clean sizes (e.g., "e500ml" → "500ml").
-        - Return only the formatted string—no extra commentary or explanation.
-
-"""
-
+        - Output a single clean line. Do not use commas, parentheses, or special characters.
+        - Do not include field labels.
+        - Avoid ownership names like "Famille J-M Cazes" unless it's the actual estate name.
+        - Always prefer wine name over ownership label.
+        - Use proper capitalization (e.g., "DOMAINE LEFLAIVE" → "Domaine Leflaive").
+        - Use "1er Cru" instead of "Premier Cru" for Burgundy.
+        - If "Vieilles Vignes" or other designations are present, place them in double quotes directly after the producer name.
+        - Place Premier Cru vineyard name after the phrase "1er Cru".
+        - Remove all commas and special characters (including hyphens in appellations like Morey-Saint-Denis → Morey Saint Denis).
+        - **Remove all accents or diacritical marks from letters (e.g., "é" becomes "e").**
+        - Champagne: Include dosage and style (e.g., Extra Brut Blanc de Noirs) before “Champagne”.
+        - New World: Appellation before grape (e.g., "Mendoza Malbec").
+        - Bordeaux: Include "Grand Cru Classe" after Pauillac, Margaux, etc., if applicable.
+        - Return only the final cleaned, space-separated name.
+    """
 }
