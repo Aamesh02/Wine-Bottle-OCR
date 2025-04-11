@@ -16,7 +16,7 @@ if uploaded_files:
         # Display original image
         st.subheader(f"Processing: {uploaded_file.name}")
         image = Image.open(uploaded_file)
-        st.image(image, caption="Original Image", use_column_width=True)
+        st.image(image, caption="Original Image", use_container_width=True)
 
         # Save uploaded file temporarily
         temp_input_path = os.path.join("temp", uploaded_file.name)
@@ -29,7 +29,7 @@ if uploaded_files:
         processed_image_bytes_io = remove_bg(temp_input_path)
 
         # Display processed image
-        st.image(processed_image_bytes_io, caption="Image with Background Removed", use_column_width=True)
+        st.image(processed_image_bytes_io, caption="Image with Background Removed", use_container_width=True)
 
         # OCR and structuring
         image_for_ocr = Image.open(processed_image_bytes_io)
@@ -41,11 +41,15 @@ if uploaded_files:
 
         # Filename generation
         def generate_filename(structured_text):
-            parts = structured_text.split(",")
-            elements = [part.strip().strip('"') for part in parts[:4] if part.strip()]
-            return "_".join(elements).replace(" ", "_") or "wine_image"
+            # Remove double quotes and replace newline characters with spaces
+            cleaned = structured_text.replace('"', '').replace('\n', ' ')
+            # Optionally, replace other special characters if needed
+            return cleaned.strip()
+
+
 
         output_name = generate_filename(structured_text) + ".jpg"
+
 
         # Download button
         st.download_button(
